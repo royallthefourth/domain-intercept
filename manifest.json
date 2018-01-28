@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "Domain Intercept",
+    "version": "1.0",
+    "description": "Override part of the DNS with your own domain configuration.",
+    "homepage_url": "https://github.com/royallthefourth/domain-intercept",
+
+    "icons": {
+        "48": "icons/dns-48.png"
+    },
+
+    "permissions": [
+        "storage",
+        "tabs",
+        "webRequest",
+        "webRequestBlocking",
+        "<all_urls>"
+    ],
+
+    "browser_action": {
+        "default_icon": "button.png",
+        "default_title": "Domain Intercept"
+    },
+
+    "background": {
+        "scripts": ["background.js"]
+    }
+}
