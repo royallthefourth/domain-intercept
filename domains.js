@@ -2,7 +2,7 @@ const onButton = document.getElementById("interceptOn"),
     offButton = document.getElementById("interceptOff");
 
 function initPageState(e) {
-    var settings = browser.storage.sync.get("domain-intercept");
+    const settings = browser.storage.local.get("domain-intercept");
 
     if(typeof settings.enabled !== "undefined" && settings.enabled === true){
         onButton.setAttribute("checked", true);
@@ -16,9 +16,13 @@ function initPageState(e) {
 }
 
 function saveEnabled(enabled) {
-    var settings = browser.storage.sync.get("domain-intercept");
+    var settings = browser.storage.local.get("domain-intercept");
     settings.enabled = enabled;
-    browser.storage.sync.set(settings);
+    browser.storage.local.set(settings);
+}
+
+function clickDelete(el) {
+    // TODO delete this row and remove its entry from storage
 }
 
 function clickEnable() {
