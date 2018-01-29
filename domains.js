@@ -12,8 +12,6 @@ addButton.onclick   = clickAdd;
 
 function initPageState() {
     browser.storage.local.get().then(function (settings){
-        console.log(settings);
-
         if(settings.hasOwnProperty("enabled") && settings.enabled === true){
             onButton.checked = true;
         }else{
@@ -21,6 +19,10 @@ function initPageState() {
         }
 
         document.querySelector("tbody").innerHTML = domainRows(settings.hasOwnProperty("records") ? settings.records : {});
+
+        document.querySelectorAll("a.delete").forEach(function(node, index) {
+            node.onclick = clickDelete;
+        });
     });
 }
 
@@ -34,8 +36,8 @@ function domainRows(records) {
     return out.join("\n");
 }
 
-function domainRow(to, from) {
-    return `<tr><td>${to}</td><td>${from}</td><td><a href="#" class="remove">delete</a></td></tr>`;
+function domainRow(from, to) {
+    return `<tr><td>${from}</td><td>${to}</td><td><a href="#" class="delete">delete</a></td></tr>`;
 }
 
 function clickAdd() {
@@ -53,8 +55,16 @@ function clickAdd() {
     });
 }
 
-function clickDelete(el) {
-    // TODO delete this row and remove its entry from storage
+function clickDelete(ev) {
+    var from = ev.target.parentElement.previousSibling.previousSibling.innerText;
+
+    browser.storage.local.get("records").then(function (records){
+        records = records.records || {};
+        delete records[from];
+        browser.storage.local.set({"records": records}).then(function (){
+            ev.target.parentElement.parentElement.parentElement.removeChild(ev.target.parentElement.parentElement);
+        });
+    });
 }
 
 function setEnabled(val) {
