@@ -20,7 +20,7 @@ function initPageState() {
 
         document.querySelector("tbody").innerHTML = domainRows(settings.hasOwnProperty("records") ? settings.records : {});
 
-        document.querySelectorAll("a.delete").forEach(function(node, index) {
+        document.querySelectorAll("a.delete").forEach(function(node) {
             node.onclick = clickDelete;
         });
     });
