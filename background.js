@@ -1,3 +1,4 @@
+/** global: browser */
 browser.browserAction.onClicked.addListener(openSettingsPage);
 
 function openSettingsPage() {

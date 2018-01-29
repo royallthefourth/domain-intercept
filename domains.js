@@ -1,3 +1,4 @@
+/** global: browser */
 "use strict";
 
 const addButton = document.getElementById("add"),
@@ -9,7 +10,7 @@ onButton.onclick    = (function(){setEnabled(true)});
 offButton.onclick   = (function(){setEnabled(false)});
 addButton.onclick   = clickAdd;
 
-function initPageState(e) {
+function initPageState() {
     browser.storage.local.get().then(function (settings){
         console.log(settings);
 
