@@ -11,15 +11,17 @@ offButton.onclick   = (function(){setEnabled(false)});
 addButton.onclick   = clickAdd;
 
 function initPageState() {
-    browser.storage.local.get().then(function (settings){
+    browser.storage.local.get("enabled").then(function (settings){
         if(settings.hasOwnProperty("enabled") && settings.enabled === true){
             onButton.checked = true;
         }else{
             offButton.checked = true;
         }
+    });
 
+    browser.storage.local.get("records").then(function (settings){
         document.querySelector("tbody").innerHTML = domainRows(settings.hasOwnProperty("records") ? settings.records : {});
-
+    }).then(function (){
         document.querySelectorAll("a.delete").forEach(function(node) {
             node.onclick = clickDelete;
         });
@@ -47,11 +49,13 @@ function clickAdd() {
     browser.storage.local.get("records").then(function (records){
         records = records.records || {};
         records[from] = to;
-        browser.storage.local.set({"records": records}).then(function (){
-            document.getElementById("from").value = "";
-            document.getElementById("to").value = "";
-            initPageState(); // this handles updates and inserts equally well without extra code
-        });
+        return records;
+    }).then(function (records){
+        return browser.storage.local.set({"records": records});
+    }).then(function (){
+        document.getElementById("from").value = "";
+        document.getElementById("to").value = "";
+        initPageState(); // this handles updates and inserts equally well without extra code
     });
 }
 
@@ -61,10 +65,10 @@ function clickDelete(ev) {
     browser.storage.local.get("records").then(function (records){
         records = records.records || {};
         delete records[from];
-        browser.storage.local.set({"records": records}).then(function (){
-            ev.target.parentElement.parentElement.parentElement.removeChild(ev.target.parentElement.parentElement);
-        });
-    });
+        return browser.storage.local.set({"records": records});
+    }).then(function (){
+        ev.target.parentElement.parentElement.parentElement.removeChild(ev.target.parentElement.parentElement);
+    });;
 }
 
 function setEnabled(val) {
